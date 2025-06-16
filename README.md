@@ -1,7 +1,3 @@
-# Area-of-steel
-This tool calculates the required steel reinforcement area (As) for rectangular reinforced concrete sections subjected to bending moments, based on material strength and section dimensions.
-import math
-
 # Dữ liệu tra theo TCVN1651-1:2008 và TCVN1651-2:2008
 betong_Rb = {
     "B15": 8.5, "B20": 11.5, "B25": 14.5, "B30": 17.0, "B35": 19.5,
@@ -38,6 +34,7 @@ bang_xi_alpha_R = {
                 "B100": {"xiR": 0.380, "alphaR": 0.309}}
 }
 
+
 def tra_xi_alpha_R(loai_thep, cap_betong):
     if loai_thep not in bang_xi_alpha_R:
         raise ValueError("Loại thép không hợp lệ.")
@@ -46,18 +43,20 @@ def tra_xi_alpha_R(loai_thep, cap_betong):
     else:
         return bang_xi_alpha_R[loai_thep]["<=B60"]
 
+
 def tinh_As(M, b, h, Rb, Rs, xi, alphaR):
     a = 50
     h0 = h - a
-    alphaM = M*1000 / (Rb * 10**-3 * b * h0**2)
+    alphaM = M * 1000 / (Rb * 10 ** -3 * b * h0 ** 2)
 
     if alphaM > alphaR:
-        print(f"Bài toán cốt kép vì alphaM = {round(alphaM, 3)} > αR = {alphaR}")
+        print(f"Bài toán cốt kép vì alphaM = {round(alphaM, 3)} > alphaR = {alphaR}")
         return None
     else:
         xi = 1 - math.sqrt(1 - 2 * alphaM)
     As = xi * Rb * b * h0 / Rs
     return round(As, 1)
+
 
 def chon_3_phuong_an_thep(As_req):
     ket_qua = []
@@ -69,10 +68,10 @@ def chon_3_phuong_an_thep(As_req):
                 ket_qua.append((n, d, tong_As, abs(tong_As - As_req)))
                 break
 
-    
     ket_qua = sorted(ket_qua, key=lambda x: x[3])
 
     return ket_qua[:3]
+
 
 print("==> Nhập các thông số thiết kế dầm:")
 M = float(input("Mômen uốn M (kNm): "))
@@ -93,8 +92,6 @@ xi_alpha = tra_xi_alpha_R(loai_thep, cap_betong)
 xiR = xi_alpha["xiR"]
 alphaR = xi_alpha["alphaR"]
 
-
-
 As = tinh_As(M, b, h, Rb, Rs, xiR, alphaR)
 
 if As:
@@ -107,4 +104,3 @@ if As:
         print(f"{i}. {sl}Φ{phi} → {tong_As} mm²")
 else:
     print("Bài toán cốt kép.")
-
