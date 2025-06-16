@@ -1,3 +1,4 @@
+import math
 # Dữ liệu tra theo TCVN1651-1:2008 và TCVN1651-2:2008
 betong_Rb = {
     "B15": 8.5, "B20": 11.5, "B25": 14.5, "B30": 17.0, "B35": 19.5,
@@ -62,7 +63,7 @@ def chon_3_phuong_an_thep(As_req):
     ket_qua = []
 
     for d, As1 in thep_tron.items():
-        for n in range(1, 21):  # thử từ 1 đến 20 thanh
+        for n in range(1, 6):
             tong_As = round(n * As1, 1)
             if tong_As >= As_req:
                 ket_qua.append((n, d, tong_As, abs(tong_As - As_req)))
@@ -73,13 +74,13 @@ def chon_3_phuong_an_thep(As_req):
     return ket_qua[:3]
 
 
-print("==> Nhập các thông số thiết kế dầm:")
+print("==> Nhập các thông số thiết kế:")
 M = float(input("Mômen uốn M (kNm): "))
 b = float(input("Chiều rộng dầm b (mm): "))
 h = float(input("Chiều cao dầm h (mm): "))
 
 cap_betong = input("Cấp độ bền bê tông (vd B20): ").upper().strip()
-loai_thep = input("Loại thép (vd CB300-T): ").upper().strip()
+loai_thep = input("Loại thép (vd CB300-V): ").upper().strip()
 
 if cap_betong not in betong_Rb:
     raise ValueError("Cấp độ bền bê tông không hợp lệ.")
